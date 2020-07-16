@@ -1,0 +1,8 @@
+# A text file that maps labels (e.g., names used in the gui) to basenames on the filesystem
+
+# label             basename in filesystem       
+
+acat_2cpt           mcsim.ACAT_two_compartment 
+acat_bupro          mcsim.bupro_acat
+mymodel1            model_01.exe
+mymodel2            model_02.exe

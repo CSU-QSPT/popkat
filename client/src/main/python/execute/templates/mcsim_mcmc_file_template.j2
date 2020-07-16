@@ -1,0 +1,64 @@
+{% extends "mcsim_base_file_template.j2" %}
+{% block sim_type %}MCMC hierarchical{% endblock sim_type %}
+{% block post_integrate %}
+MCMC ("{{ meta_info.out_file }}", "", "", {{ sim_params.num_iters }}, 0, 1, {{ sim_params.num_iters }}, {{ sim_params.rng_seed }});
+{% endblock post_integrate%}
+{% block content %}
+Level { # priors on population parameters
+
+	# population-level params
+	{%- for clsf, params in scalar_params.items() %}
+	# {{ clsf }}
+	{%- for p in params %}
+	{%- set notes = p.notes %}
+	{%- if notes %}
+	{%- set notes = '| ' + notes %}
+	{%- endif %}
+	{{ p.name }} = {{ p.value }};		# {{ p.description }} [{{ p.units }}] {{ notes }}
+	{%- endfor %}
+	{% endfor %}
+
+	# population-level priors
+	{%- for ep in est_params %}
+	{%- if ep.dist %}
+	Distrib ({{ ep.name }}, {{ ep.dist }}, {{ ep.args | join(', ') }});
+	{%- else %}
+	Distrib ({{ ep.name }}, LogNormal_v, {{ ep.mean }}, {{ ep.pop_var }});
+	{%- endif %}
+	{%- endfor %}
+
+	# data likelihood(s)
+	{%- set likelihood_vars = [] %}
+	{%- for ep in est_params %}
+	{%- if ep.ind_var %}
+	{%- set likelihood_vars = likelihood_vars.append(ep.ind_var) %}
+	{%- endif %}
+	{%- endfor %}
+	{%- for sv in sampled_variables %}
+	Likelihood(Data({{ sv }}), LogNormal_v, Prediction({{ sv }}), {{ likelihood_vars | max }});
+	{%- endfor %}
+
+	Level { # individuals
+		# individual-level priors
+		{% for ep in est_params %}
+		Distrib ({{ ep.name }}, LogNormal_v, {{ ep.name }}, {{ ep.ind_var }});
+		{%- endfor %}
+
+		# level for each individual
+		{%- for subject_id, data in pkdata | dictsort(true) %}
+		Level {   # subject id: {{ subject_id }}
+		{%- for trial_id, expt in data | dictsort(true) %}
+			Experiment {   # trial: {{ trial_id }}
+				BDM = {{ expt.body_mass }};
+				{{ expt.dosing_regimen }};
+				Print({{ expt.sampled_variable }}, {{ expt.sampling_times | join(' ') }});
+				Data({{ expt.sampled_variable }}, {{ expt.sampled_values | join(' ') }});
+			}  # end trial id: {{ trial_id }}
+		{%- endfor %}
+		}   # end subject id: {{ subject_id }}
+		{%- endfor %}
+
+	}  # end individuals
+
+} # end population
+{% endblock content %}

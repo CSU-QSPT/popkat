@@ -1,0 +1,25 @@
+{% extends "mcsim_base_file_template.j2" %}
+{% block sim_type %}Scalar integration (forward){% endblock sim_type %}
+{% block post_integrate %}
+OutputFile ("{{ meta_info.out_file }}");
+{% endblock post_integrate%}
+{% block content %}
+# model variables
+{%- for cls, params in scalar_params.items() %}
+# {{ cls }}
+{%- for p in params %}
+{%- set notes = p.notes %}
+{%- if notes %}
+	{%- set notes = '| ' + notes %}
+{%- endif %}
+{{ p.name }} = {{ p.value }};		# {{ p.description }} [{{ p.units }}] {{ notes }}
+{%- endfor %}
+{% endfor %}
+
+Simulation {
+
+	{{ dosing }};
+
+	PrintStep({{ output_vars | join(', ')}}, {{ sim_params.t_start }}, {{ sim_params.t_end }}, {{ sim_params.t_step }});
+}
+{% endblock content %}

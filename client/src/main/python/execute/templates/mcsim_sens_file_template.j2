@@ -1,0 +1,12 @@
+{% extends "mcsim_setpts_file_template.j2" %}
+{% block sim_type %}Sensitivity+SetPoints{% endblock sim_type %}
+{% block post_header %}
+#------------------------------------------------------------------------------
+# For SALib sensitivity analysis:
+{{ sensitivity_info.problem_delim }}		{
+{{ sensitivity_info.problem_delim }}			'num_vars': {{ sensitivity_info.num_vars }},
+{{ sensitivity_info.problem_delim }}			'names': {{ sensitivity_info.names }},
+{{ sensitivity_info.problem_delim }}			'bounds': {{ sensitivity_info.bounds }},
+{{ sensitivity_info.problem_delim }}		}
+#------------------------------------------------------------------------------
+{% endblock post_header %}

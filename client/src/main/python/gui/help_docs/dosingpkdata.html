@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Dosing and Pharmacokinetic Data</title>
+  <style type="text/css">
+      code{white-space: pre-wrap;}
+      span.smallcaps{font-variant: small-caps;}
+      span.underline{text-decoration: underline;}
+      div.column{display: inline-block; vertical-align: top; width: 50%;}
+  </style>
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+  <style type="text/css">
+  
+  body {
+      margin: auto;
+      padding-right: 1em;
+      padding-left: 1em;
+      max-width: 44em;
+      color: black;
+      font-family: Verdana, sans-serif;
+      font-size: 100%;
+      line-height: 140%;
+      color: #333;
+  }
+  
+  h1 {
+      background-color: #2a6592;
+      color: white;
+      margin: 0;
+      padding: 10px;
+  }
+  
+  h2 {
+      color: #2a6592;
+      padding-top: 1em;
+  }
+  
+  dt {
+      color: #db9833;
+      font-weight: bold;
+      padding-top: 1em;
+  }
+  dd {
+      color: black;
+  }
+  
+  em {
+      font-weight: bold;
+      color: darkslategray;
+  }
+  
+  strong {
+      font-weight: bold;
+      color: darkorange;
+  }
+  
+  th, td {
+      padding-left: 2em;
+      text-align: left;
+    }
+  
+  </style>
+</head>
+<body>
+<header>
+<h1 class="title">Dosing and Pharmacokinetic Data</h1>
+</header>
+<h2 id="data-grid">Data grid</h2>
+<p>For simulations involving <em>Parameter estimation</em>, a full grid will be presented into which dosing and pharmacokinetic data may be entered for multiple subjects. For other types of simulations, a simpler grid for entering dosing specifications will be used.</p>
+<p>Thus, depending on the type of simulation, not all of the elements described below will be present in this interface page.</p>
+<h3 id="grid-values">Grid values</h3>
+<p><em>Dosing type</em> should take on one of several integer values:</p>
+<table>
+<thead>
+<tr class="header">
+<th style="text-align: center;">Value</th>
+<th style="text-align: left;">Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">0</td>
+<td style="text-align: left;">Oral: slow release</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">1</td>
+<td style="text-align: left;">Oral: immediate release</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">2</td>
+<td style="text-align: left;">Intravenous</td>
+</tr>
+</tbody>
+</table>
+<h3 id="types-of-values">Types of values</h3>
+<p>Aside from the <em>Dosing type</em>, values may be integers or floating point numbers.</p>
+<p>The following columns can accept lists of values: “Dose administration times”, “Administered dose amounts”, “Measurement time points” and “Measured concentrations”.</p>
+<p>Numerical values in these lists can be separated by commas, semicolons, spaces, or tabs.</p>
+<h2 id="edit-table">Edit table</h2>
+<dl>
+<dt>Add Row</dt>
+<dd>Add a row to the bottom of the grid
+</dd>
+<dt>Remove Row</dt>
+<dd>Delete the selected row
+</dd>
+<dt>Remove All Rows</dt>
+<dd>Remove all the grid rows
+</dd>
+</dl>
+<h2 id="loadsave">Load/Save</h2>
+<dl>
+<dt>Load Data</dt>
+<dd>Fill the grid by selecting an appropriately-formatted comma-separated value (csv) file
+</dd>
+<dt>Save Data</dt>
+<dd>Save the grid data to a csv file
+</dd>
+</dl>
+</body>
+</html>

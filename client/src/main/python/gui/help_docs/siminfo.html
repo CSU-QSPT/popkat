@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Simulation Information</title>
+  <style type="text/css">
+      code{white-space: pre-wrap;}
+      span.smallcaps{font-variant: small-caps;}
+      span.underline{text-decoration: underline;}
+      div.column{display: inline-block; vertical-align: top; width: 50%;}
+  </style>
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+  <style type="text/css">
+  
+  body {
+      margin: auto;
+      padding-right: 1em;
+      padding-left: 1em;
+      max-width: 44em;
+      color: black;
+      font-family: Verdana, sans-serif;
+      font-size: 100%;
+      line-height: 140%;
+      color: #333;
+  }
+  
+  h1 {
+      background-color: #2a6592;
+      color: white;
+      margin: 0;
+      padding: 10px;
+  }
+  
+  h2 {
+      color: #2a6592;
+      padding-top: 1em;
+  }
+  
+  dt {
+      color: #db9833;
+      font-weight: bold;
+      padding-top: 1em;
+  }
+  dd {
+      color: black;
+  }
+  
+  em {
+      font-weight: bold;
+      color: darkslategray;
+  }
+  
+  strong {
+      font-weight: bold;
+      color: darkorange;
+  }
+  
+  th, td {
+      padding-left: 2em;
+      text-align: left;
+    }
+  
+  </style>
+</head>
+<body>
+<header>
+<h1 class="title">Simulation Information</h1>
+</header>
+<p>On this page, details of the simulation can be specified.</p>
+<h2 id="general-information">General Information</h2>
+<dl>
+<dt>Description</dt>
+<dd>A unique description for the simulation
+</dd>
+<dt>Notes</dt>
+<dd>Details about the simulation
+</dd>
+<dt>Tags</dt>
+<dd>A set of comma- or space-separated words that can be used in simulation searches
+</dd>
+</dl>
+<h2 id="simulation-type">Simulation type</h2>
+<dl>
+<dt>Forward</dt>
+<dd>A single model simulation using scalar values of the model parameters
+</dd>
+<dt>Monte Carlo:</dt>
+<dd>A set of simulations using <em>distributions</em> specified for model parameters
+</dd>
+<dt>Sensitivity</dt>
+<dd>A global sensitivity analysis using the model parameters specified
+</dd>
+<dt>Parameter estimation + Setpoints</dt>
+<dd>A parameter estimation followed by an analysis using the estimated distributions
+</dd>
+</dl>
+<h2 id="simulation-details">Simulation details</h2>
+<p>The entries presented will depend on the simulation type.</p>
+<p>The entire list is as follows:</p>
+<dl>
+<dt>Start time</dt>
+<dd>The start time for the simulations
+</dd>
+<dt>End time</dt>
+<dd>The end time for the simulations
+</dd>
+<dt>Number of time steps</dt>
+<dd>The number of time steps to record within the interval [Start time, End time]
+</dd>
+<dt>Random seed</dt>
+<dd>The seed used to initialize the pseudo random number (PRN) generator. By using the same seed, simulations relying on PRNs can be repeated. If this entry is left blank, a seed based on the current system time will be used and stochastic simulation results can vary from run to run.
+</dd>
+<dt>Number of draws</dt>
+<dd>For Monte Carlo simulations, the number of times the target distributions are sampled
+</dd>
+<dt>Number of iterations</dt>
+<dd>The length of the chain for parameter estimation (Markov chain Monte Carlo) simulations
+</dd>
+</dl>
+</body>
+</html>

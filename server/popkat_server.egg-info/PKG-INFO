@@ -1,0 +1,11 @@
+Metadata-Version: 1.2
+Name: popkat-server
+Version: 0.1
+Summary: This package is the server component of the PoPKAT application
+Home-page: https://gitlab.com/csu-qspt/popkat-server
+Author: Brad Reisfeld
+Author-email: brad.reisfeld@colostate.edu
+License: MIT
+Description: UNKNOWN
+Platform: UNKNOWN
+Requires-Python: >=3.6

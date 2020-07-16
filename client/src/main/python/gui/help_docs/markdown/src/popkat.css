@@ -1,0 +1,51 @@
+<style type="text/css">
+
+body {
+    margin: auto;
+    padding-right: 1em;
+    padding-left: 1em;
+    max-width: 44em;
+    color: black;
+    font-family: Verdana, sans-serif;
+    font-size: 100%;
+    line-height: 140%;
+    color: #333;
+}
+
+h1 {
+    background-color: #2a6592;
+    color: white;
+    margin: 0;
+    padding: 10px;
+}
+
+h2 {
+    color: #2a6592;
+    padding-top: 1em;
+}
+
+dt {
+    color: #db9833;
+    font-weight: bold;
+    padding-top: 1em;
+}
+dd {
+    color: black;
+}
+
+em {
+    font-weight: bold;
+    color: darkslategray;
+}
+
+strong {
+    font-weight: bold;
+    color: darkorange;
+}
+
+th, td {
+    padding-left: 2em;
+    text-align: left;
+  }
+
+</style>

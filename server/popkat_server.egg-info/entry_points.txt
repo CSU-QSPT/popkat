@@ -1,0 +1,3 @@
+[console_scripts]
+popkat_server = popkat_server.server:main
+

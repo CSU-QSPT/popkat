@@ -1,0 +1,37 @@
+# Compiled python modules.
+*.py[co]
+
+# Setuptools distribution folder
+/build/
+/dist/
+
+# Python egg metadata, regenerated from source files by setuptools.
+/*.egg-info
+/*.egg
+
+# Cached python files
+__pycache__
+.pytest_cache
+
+# Backup and temp files
+*~
+~*
+*.bak
+tmp*
+backups
+**/tests/output
+._*
+
+# Editor/IDE files
+.vscode
+.history
+
+# Log files
+*.log
+
+# fbs installer
+/target/
+
+# mcsim output files
+*.out
+*.out.kernel

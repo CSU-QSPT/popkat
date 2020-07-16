@@ -1,0 +1,30 @@
+{% extends "mcsim_base_file_template.j2" %}
+{% block sim_type %}SetPoints{% endblock sim_type %}
+{% block post_integrate %}
+{%- set sp_params = [] %}
+{%- for ep in est_params %}
+	{%- set sp_params = sp_params.append(ep.name) %}
+{%- endfor %}
+SetPoints("{{ meta_info.out_file }}", "{{ meta_info.setpts_data_file }}", 0,
+	{{ sp_params | join(', ') }});
+{% endblock post_integrate%}
+{% block content %}
+# model variables
+{%- for clsf, params in scalar_params.items() %}
+# {{ clsf }}
+{%- for p in params %}
+{%- set notes = p.notes %}
+{%- if notes %}
+	{%- set notes = '| ' + notes %}
+{%- endif %}
+{{ p.name }} = {{ p.value }};		# {{ p.description }} [{{ p.units }}] {{ notes }}
+{%- endfor %}
+{% endfor %}
+
+Simulation {
+
+	{{ dosing }};
+
+	PrintStep({{ output_vars | join(', ')}}, {{ sim_params.t_start }}, {{ sim_params.t_end }}, {{ sim_params.t_step }});
+}
+{% endblock content %}

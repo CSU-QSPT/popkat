@@ -1,0 +1,215 @@
+Integrate (Lsodes, 1e-8, 1e-8, 1);
+
+MCMC ("MCMC.default.out","", # name of output file
+      "",                    # name of data file
+      10000,0,              # iterations, print predictions flag
+      10, 10000,           # printing frequency, iters to print
+      10101010);             # random seed
+
+Level { # Population Level
+  
+  # Substance-specific parameters (fixed) -----------------------------------
+  MM = 239.74; 
+  Mol_vol = 160; 
+  
+  # Absorption on(1)/off(0) switches
+  f_Abs_stom = 1;
+  f_Abs_duod = 1;
+  f_Abs_jeju = 1;
+  f_Abs_ileum = 1;
+  f_Abs_cecum = 1;
+  f_Abs_colon = 1;
+  
+  #-------------------------------------
+  # Substance-specific parameters (28 tested)
+  #-------------------------------------
+  # Galenic radius (microm)
+  G_Radius = 25; 
+  
+  # Powder density (Hancock et al., 2003) (g/ml) 
+  # "The Relative Densities of Pharmaceutical Powders, Blends,Dry Granulations,and Immediate-Release Tablets"
+  # Possible range was 0.2 - 2.8
+  
+  G_Density = 1.47; 
+  
+  # Intrinsic (instantaneous) water solubility (microg/L)
+  # The range of Solubility was assumed to be 3,307,061  to 16,379,981
+  Solubility = 7.36e6;
+  
+  # Precipitation rate (1/h)
+  # According to "Approaches for measuring intestinal precipitation rates of oral drugs"
+  # Precipitation rate half‐lifes varied between 500s (0.1389h) and 5000s (1.389h)
+  # The range of K_precip might be 0.72 to 7.2 
+  K_precip = 4; # Assumed 900s sourced from Almukainzi (2016)
+  
+  # Effective permeability of g.i. tract epithelia
+  # 100*10^-7*360 cm/s to dm/hr
+  #lnPeff = -5.626821; 
+  Distrib (M_lnPeff, Uniform, -5.6, -4);
+  
+  # Excretion over absorption rate constant ratios
+  
+  # Volumes (L)
+  # https://www.drugbank.ca/drugs/DB00277
+  # Volume of distribution 0.3 to 0.7 L/kg
+  Distrib (M_lnV_central, Uniform, 0, 6.9);
+  
+  # Transfer rate constants between central and peripheral compartments (1/h)
+  Distrib(M_lnKc2p, Uniform, -6.9, 0.0);
+  Distrib(M_lnKp2c, Uniform, -6.9, 0.0); 
+  
+  # Elimination rate constant from central (1/h)
+  Distrib(M_lnKelim, Uniform, -4.6, 0); 
+  
+  
+  Distrib(M_lnWeibull_slope, Uniform, 0, 2.3);
+  Distrib(M_lnWeibull_scale, Uniform, -2.3, 2.3);
+  
+  # Inter variances:
+  Distrib (Vr_lnPeff, InvGamma, 2.25, 0.3125);
+  Distrib (Vr_lnV_central, InvGamma, 2.25, 0.3125);
+  Distrib (Vr_lnKc2p, InvGamma, 2.25, 0.3125);
+  Distrib (Vr_lnKp2c, InvGamma, 2.25, 0.3125); 
+  Distrib (Vr_lnKelim, InvGamma, 2.25, 0.3125); 
+  Distrib (Vr_lnWeibull_slope, InvGamma, 2.25, 0.3125);
+  Distrib (Vr_lnWeibull_scale, InvGamma, 2.25, 0.3125);
+  
+  
+  # Intra variances:
+  Distrib (Va_lnPeff, InvGamma, 2.25, 0.3125);
+  Distrib (Va_lnKelim, InvGamma, 2.25, 0.3125); 
+  Distrib (Va_lnWeibull_slope, InvGamma, 2.25, 0.3125);
+  Distrib (Va_lnWeibull_scale, InvGamma, 2.25, 0.3125);
+  
+  Distrib(Ve_C_central, LogUniform, 0.01, 0.5);
+  Likelihood(C_central_ngml, Normal_v, Prediction(C_central_ngml), Ve_C_central);
+  
+  Level { # Individuals
+    
+    Distrib (lnPeff, TruncNormal_v, M_lnPeff, Vr_lnPeff, -5.6, -4);
+    Distrib (lnV_central, TruncNormal_v, M_lnV_central, Vr_lnV_central, 0, 6.9);
+    Distrib (lnKc2p, TruncNormal_v, M_lnKc2p, Vr_lnKc2p, -6.9, 0);
+    Distrib (lnKp2c, TruncNormal_v, M_lnKp2c, Vr_lnKp2c, -6.9, 0);
+    Distrib (lnKelim, TruncNormal_v, M_lnKelim, Vr_lnKelim, -4.6, 0);
+    
+    Level { # individual 1
+      
+      
+      Distrib (lnPeff, TruncNormal_v, M_lnPeff, Va_lnPeff, -5.6, -4);
+      Distrib (lnKelim, TruncNormal_v, M_lnKelim, Va_lnKelim, -4.6, 0);
+      Distrib (lnWeibull_slope, TruncNormal_v, M_lnWeibull_slope, Va_lnWeibull_slope, 0, 2.3);
+      Distrib (lnWeibull_scale, TruncNormal_v, M_lnWeibull_scale, Va_lnWeibull_scale, -2.3, 2.3);
+      
+      BDM = 72.7;
+      
+      Experiment { # Experiment IR 75
+        G_immediate_d = 1;    
+        Oral_dose_rate = NDoses(2, 3128.389, 0, 0, 0.1);  # 75 * 1000 / 239.74
+        Print (C_central_ngml, 1 2 3 4 6 8 24 48 );
+        Data (C_central_ngml, 78.3 63.6 24.6 29.7 16.7 10.4 5.57 2.84 );
+        #Print (F_bio, 48 );
+        #Data (F_bio,  0.2);
+      }
+      Experiment { # Experiment IR 100
+        G_immediate_d = 1;  
+        Oral_dose_rate = NDoses(2, 4171.185, 0, 0, 0.1);
+        Print (C_central_ngml, 0.5 1 2 3 4 6 8 24 );
+        Data (C_central_ngml, 57.2 156 114 62.8 41.4 24.7 21.2 6.25 );
+        #Print (F_bio, 48 );
+        #Data (F_bio,  0.2);
+      }
+      #Experiment { # Experiment SR 100
+      #  G_delayed_d = 1;
+      #  PO_dose = PerDose(417.1185, 1e2, Tlag, 10);
+      #  Print (C_central, 0.25 0.5 1 1.5 3 4 6 8 24 );
+      #  Data (C_central, 11.7 38.5 25.1 24.5 23.9 31.5 25.4 22.5 5.28 );
+        #Print (F_bio, 0);
+        #Data (F_bio, -1);
+      #}
+      #Experiment { # Experiment SR 150
+      #  G_delayed_d = 1;
+      #  PO_dose = PerDose(625.6778, 1e2, Tlag, 10);
+      #  Print (C_central, 0.25 0.5 1 1.5 2 4 6 8 24 );
+      #  Data (C_central, 4.22 87.8 65.5 65.4 62.7 49.7 41.3 10.4 4.15 );
+        #Print (F_bio, 0);
+        #Data (F_bio, -1);
+      #}
+      Experiment { # Experiment ER 150
+        G_delayed_d = 1;
+        PO_dose = PerDose(625.6778, 1e2, Tlag, 10);
+        Print (C_central_ngml, 1.5 2 4 6 8 24 48 );
+        Data (C_central_ngml, 41.2 36.2 19.4 10.4 7.8 7.89 3.82 );
+        #Print (F_bio, 0);
+        #Data (F_bio, -1);
+      }
+      Experiment { # Experiment ER 300
+        G_delayed_d = 1;
+        PO_dose = PerDose(1251.356, 1e2, Tlag, 10);
+        Print (C_central_ngml, 1.5 2 4 6 8 24 48 72 );
+        Data (C_central_ngml, 82.5 127 68.9 49.6 28.7 13 6.48 3.62 );
+        #Print (F_bio, 0);
+        #Data (F_bio, -1);
+      }
+    }
+    
+    Level { # individual 2  
+      
+      Distrib (lnPeff, TruncNormal_v, M_lnPeff, Va_lnPeff, -5.6, -4);
+      Distrib (lnKelim, TruncNormal_v, M_lnKelim, Va_lnKelim, -4.6, 0);
+      Distrib (lnWeibull_slope, TruncNormal_v, M_lnWeibull_slope, Va_lnWeibull_slope, 0, 2.3);
+      Distrib (lnWeibull_scale, TruncNormal_v, M_lnWeibull_scale, Va_lnWeibull_scale, -2.3, 2.3);
+      
+      BDM = 84.4;
+      
+      Experiment { # Experiment IR 75
+        G_immediate_d = 1;    
+        Oral_dose_rate = NDoses(2, 3128.389, 0, 0, 0.1); 
+        Print (C_central_ngml, 0.5 1 2 3 4 6 8 24 );
+        Data (C_central_ngml, 13.6 76 53.1 30.2 17.6 8.65 7.44 3.05 );
+        #Print (F_bio, 48 );
+        #Data (F_bio,  0.2);
+      }
+      Experiment { # Experiment IR 100
+        G_immediate_d = 1;  
+        Oral_dose_rate = NDoses(2, 4171.185, 0, 0, 0.1);
+        Print (C_central_ngml, 0.5 1 2 3 4 6 8 24 );
+        Data (C_central_ngml, 24 115 44.2 34.9 23.5 19.5 11.1 6.7 );
+        #Print (F_bio, 48 );
+        #Data (F_bio,  0.2);
+      }
+      #Experiment { # Experiment SR 100
+      #  G_delayed_d = 1;
+      #  PO_dose = PerDose(417.1185, 1e2, Tlag, 10);
+      #  Print (C_central, 0.5 1 1.5 3 4 6 8 24 );
+      #  Data (C_central, 6.72 14.5 22.1 22.1 17.2 12.8 5.88 2.23 );
+        #Print (F_bio, 0);
+        #Data (F_bio, -1);
+      #}
+      #Experiment { # Experiment SR 150
+      #  G_delayed_d = 1;
+      #  PO_dose = PerDose(625.6778, 1e2, Tlag, 10);
+      #  Print (C_central, 0.25 0.5 1 1.5 2 4 6 8 24 48 );
+      #  Data (C_central, 2.34 34 18.4 33.3 41.5 32.4 30.9 6.2 5.21 2.1 );
+        #Print (F_bio, 0);
+        #Data (F_bio, -1);
+      #}
+      Experiment { # Experiment ER 150
+        G_delayed_d = 1;
+        PO_dose = PerDose(625.6778, 1e2, Tlag, 10);
+        Print (C_central_ngml, 1 1.5 2 4 6 8 24 48 72 );
+        Data (C_central_ngml, 12.3 43.4 49.7 31.9 23.8 19.7 9.31 5.71 5.86 );
+        #Print (F_bio, 0);
+        #Data (F_bio, -1);
+      }
+      Experiment { # Experiment ER 300
+        G_delayed_d = 1;
+        PO_dose = PerDose(1251.356, 1e2, Tlag, 10);
+        Print (C_central_ngml, 1 1.5 2 4 6 8 24 48 72 );
+        Data (C_central_ngml, 28.6 49.2 85.2 70.7 47.1 18.1 14.1 8.21 3.26 );
+        #Print (F_bio, 0);
+        #Data (F_bio, -1);
+      }
+    }
+  } # End Individuals
+} # End Population Level
+End.
